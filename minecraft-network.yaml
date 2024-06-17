@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  fabric:
+    image: itzg/minecraft-server
+    container_name: minecraft-server-fabric
+    restart: unless-stopped
+    environment:
+      MEMORY: 16G
+      USE_AIKAR_FLAGS: TRUE
+      ENABLE_ROLLING_LOGS: TRUE
+      TZ: !timezone
+      EULA: "TRUE"
+      MOD_PLATFORM: MODRINTH
+      MODRINTH_MODPACK: !modpack
+      MODRINTH_LOADER: fabric
+      LEVEL_TYPE: !leveltype
+      MOTD: !motd1
+      OPS: |
+        !op1
+        !op2
+        !op3
+      SNOOPER_ENABLED: FALSE
+    volumes:
+      - "./minecraft/minecraft-server-fabric:/data"
+  neoforge:
+    image: itzg/minecraft-server
+    container_name: minecraft-server-neoforge
+    restart: unless-stopped
+    environment:
+      MEMORY: 16G
+      USE_AIKAR_FLAGS: TRUE
+      ENABLE_ROLLING_LOGS: TRUE
+      TZ: !timezone
+      EULA: "TRUE"
+      MOD_PLATFORM: MODRINTH
+      MODRINTH_MODPACK: !modpack
+      MODRINTH_LOADER: neoforge
+      LEVEL_TYPE: !leveltype
+      MOTD: !motd2
+      OPS: |
+        !op1
+        !op2
+        !op3
+      SNOOPER_ENABLED: FALSE
+    volumes:
+      - "./minecraft/minecraft-server-neoforge:/data"
+  cloudflared:
+    image: cloudflare/cloudflared
+    container_name: cloudflare-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TZ: !timezone
+      TUNNEL_TOKEN: !token
+  router:
+    image: itzg/mc-router
+    depends_on:
+      - fabric
+      - neoforge
+      - cloudflared
+    environment:
+      MAPPING: |
+        !server1=fabric:25565
+        !server2=neoforge:25565
+    ports:
+      - "25565:25565"
