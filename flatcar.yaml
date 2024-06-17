@@ -1,0 +1,44 @@
+variant: flatcar
+version: 1.0.0
+passwd:
+  users:
+    - name: core
+      password_hash: ""
+kernel_arguments:
+  should_exist:
+    - mitigations=auto,nosmt
+    - tsx=auto
+systemd:
+  units:
+    - name: docker.service
+      enabled: true
+      dropins:
+        - name: 10-restrict.conf
+          contents: |
+            [Socket]
+            SocketGroup=root
+        - name: 30-increase-ulimit.conf
+          contents: |
+            [Service]
+            LimitMEMLOCK=infinity
+    - name: sshd.service
+      mask: true
+    - name: sshd.socket
+      mask: true
+storage:
+  files:
+    - path: /etc/modprobe.d/blacklist.conf
+      mode: 0644
+      contents:
+        inline: |
+          blacklist usb-storage
+    - path: /etc/sudoers.d/core-passwd
+      mode: 0644
+      contents:
+        inline: |
+          core	ALL=(ALL) 	ALL
+  links:
+    - path: /etc/systemd/system/multi-user.target.wants/docker.service
+      target: /usr/lib/systemd/system/docker.service
+      hard: false
+      overwrite: true
