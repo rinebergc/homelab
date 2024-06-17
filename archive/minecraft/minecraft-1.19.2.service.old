@@ -1,0 +1,35 @@
+[Unit]
+Description=Minecraft-Fabric-1.19.2
+After=network.target
+
+[Service]
+Type=simple
+
+# Userspace
+User=minecraft
+Group=minecraft
+
+# Process I/O
+Sockets=minecraft-1.19.2.socket
+StandardInput=socket
+StandardError=journal
+StandardOutput=journal
+WorkingDirectory=/opt/minecraft/1.19.2
+ExecStart=/usr/bin/java -Xmx32G -Xms32G -jar /opt/minecraft/1.19.2/fabric-server-mc.1.19.2-loader.0.14.21-launcher.0.11.2.jar nogui
+ExecStop=/bin/sh -c "echo 'stop' > /run/minecraft/console"
+Restart=on-failure
+
+# Security Features
+NoNewPrivileges=true
+ProtectClock=true
+PrivateDevices=true
+ProtectHome=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=full
+PrivateTmp=true
+PrivateUsers=true
+
+[Install]
+WantedBy=multi-user.target

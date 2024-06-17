@@ -1,0 +1,5 @@
+[Unit]
+PartOf=minecraft-1.19.2.service
+
+[Socket]
+ListenFIFO=%t/minecraft/console

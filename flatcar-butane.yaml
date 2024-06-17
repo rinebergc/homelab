@@ -3,12 +3,15 @@ version: 1.0.0
 passwd:
   users:
     - name: core
-      password_hash: ""
+      password_hash: "ADD PASSWORD HASH HERE"
 kernel_arguments:
   should_exist:
     - ipv6.disable=1
+    - flatcar.autologin
     - mitigations=auto,nosmt
     - tsx=auto
+  should_not_exist:
+    - quiet
 systemd:
   units:
     - name: docker.service

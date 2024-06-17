@@ -1,0 +1,18 @@
+# install java 17
+sudo apt install openjdk-17-jre-headless -y
+
+# make group/user and working dir for minecraft
+sudo groupadd -r minecraft && sudo adduser --system --no-create-home minecraft --ingroup minecraft
+sudo mkdir /opt/minecraft
+curl -OJ https://meta.fabricmc.net/v2/versions/loader/1.19.2/0.14.21/0.11.2/server/jar
+sudo mv fabric-server-mc.1.19.2-loader.0.14.21-launcher.0.11.2.jar /opt/minecraft
+chown -R minecraft /opt/minecraft
+
+# copy unit and enable unit files
+sudo cp minecraft-1.19.2.service /etc/systemd/system/minecraft-1.19.2.service && sudo chown root:root /etc/systemd/system/minecraft-1.19.2.service
+sudo cp minecraft-1.19.2.socket /etc/systemd/system/minecraft-1.19.2.socket && sudo chown root:root /etc/systemd/system/minecraft-1.19.2.socket
+sudo systemctl daemon-reload
+sudo systemctl enable minecraft-1.19.2.service
+
+# open required port
+sudo ufw allow 25565/tcp comment "Minecraft"

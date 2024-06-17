@@ -1,0 +1,176 @@
+#!/bin/bash
+
+# package/library management
+	# removal
+		# cloud-init
+		if [[ -d "/etc/cloud" ]]; then
+			sudo apt purge -y --auto-remove cloud-init
+			sudo rm -rf /etc/cloud/ && sudo rm -rf /var/lib/cloud
+			sudo touch /etc/cloud/cloud-init.disabled
+		else
+			echo "Package \"cloud-init\" is not installed."
+		fi
+
+		# snap
+		if [[ -d "/snap" ]]; then
+			sudo systemctl stop snapd
+			sudo apt purge -y --auto-remove snapd
+			sudo rm -rf /snap && sudo rm -rf /var/cache/snapd
+			sudo systemctl daemon-reload
+		else
+			echo "Package \"snap\" is not installed."
+		fi
+
+	# installation
+		# libraries/packages - system hardening
+		sudo apt install -y acct arpwatch auditd apt-listchanges apt-show-versions debsums fail2ban jitterentropy-rngd libpam-cracklib libpam-tmpdir lynis needrestart rng-tools-debian sysstat ufw
+
+# system hardening
+	# add restricted access warnings
+		# print security warning to /etc/issue
+		echo "This system is protected under the Computer Fraud and Abuse Act of 1986 and the Florida Computer Crimes Act." | sudo tee /etc/issue
+		echo "Unauthorized access or use is a violation of law and may lead to prosecution." | sudo tee -a /etc/issue
+		echo "By continuing to use this system you indicate your awareness of and consent to these conditions of use." | sudo tee -a /etc/issue
+		# print security warning to /etc/issue.net
+		echo "This system is protected under the Computer Fraud and Abuse Act of 1986 and the Florida Computer Crimes Act." | sudo tee /etc/issue.net
+		echo "Unauthorized access or use is a violation of law and may lead to prosecution." | sudo tee -a /etc/issue.net
+		echo "By continuing to use this system you indicate your awareness of and consent to these conditions of use." | sudo tee -a /etc/issue.net
+
+	# configure fail2ban
+		sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+		echo "[sshd]" | sudo tee /etc/fail2ban/jail.d/sshd.local
+		echo "enabled = true" | sudo tee -a /etc/fail2ban/jail.d/sshd.local
+		echo "port = 22" | sudo tee -a /etc/fail2ban/jail.d/sshd.local
+		echo "filter = sshd" | sudo tee -a /etc/fail2ban/jail.d/sshd.local
+		echo "logpath = /var/log/auth.log" | sudo tee -a /etc/fail2ban/jail.d/sshd.local
+		echo "maxretry = 3" | sudo tee -a /etc/fail2ban/jail.d/sshd.local
+		echo "bantime = 600" | sudo tee -a /etc/fail2ban/jail.d/sshd.local
+		echo "findtime = 600" | sudo tee -a /etc/fail2ban/jail.d/sshd.local
+		sudo systemctl start fail2ban
+		sudo systemctl enable fail2ban
+
+	# configure NTP
+		echo "[Time]" | sudo tee /etc/systemd/timesyncd.conf
+		echo "NTP=time.cloudflare.com" | sudo tee -a /etc/systemd/timesyncd.conf
+		echo "FallbackNTP=time.nist.gov" | sudo tee -a /etc/systemd/timesyncd.conf
+
+	# configure ssh
+		sudo sed -i 's/#LogLevel[[:blank:]]*INFO/LogLevel VERBOSE/' /etc/ssh/sshd_config
+		sudo sed -i 's/#MaxAuthTries[[:blank:]]*6/MaxAuthTries 3/' /etc/ssh/sshd_config
+		sudo sed -i 's/#MaxSessions[[:blank:]]*10/MaxSessions 2/' /etc/ssh/sshd_config
+		sudo sed -i 's/#AllowAgentForwarding[[:blank:]]*yes/AllowAgentForwarding no/' /etc/ssh/sshd_config
+		sudo sed -i 's/#AllowTcpForwarding[[:blank:]]*yes/AllowTcpForwarding no/' /etc/ssh/sshd_config
+		sudo sed -i 's/X11Forwarding[[:blank:]]*yes/X11Forwarding no/' /etc/ssh/sshd_config
+		sudo sed -i 's/#TCPKeepAlive[[:blank:]]*yes/TCPKeepAlive no/' /etc/ssh/sshd_config
+		sudo sed -i 's/#Compression[[:blank:]]*delayed/Compression no/' /etc/ssh/sshd_config
+		sudo sed -i 's/#ClientAliveCountMax[[:blank:]]*3/ClientAliveCountMax 2/' /etc/ssh/sshd_config
+		sudo sed -i 's/#Banner[[:blank:]]*none/Banner \/etc\/issue.net/' /etc/ssh/sshd_config
+		# limit ssh cryptography to known secure algorithms
+		echo "" | sudo tee -a /etc/ssh/sshd_config
+		echo "KexAlgorithms curve25519-sha256,curve25519-sha256@libssh.org,sntrup761x25519-sha512@openssh.com,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512" | sudo tee -a /etc/ssh/sshd_config
+		echo "HostKeyAlgorithms ssh-ed25519,rsa-sha2-256,rsa-sha2-512" | sudo tee -a /etc/ssh/sshd_config
+		echo "MACs umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512" | sudo tee -a /etc/ssh/sshd_config
+		echo "" | sudo tee -a /etc/ssh/sshd_config
+		# limit ssh access to specific users
+		echo "AllowUsers    rinebergc" | sudo tee -a /etc/ssh/sshd_config
+		sudo service ssh restart
+
+	# configure ufw
+		sudo ufw default deny incoming
+		sudo ufw default allow outgoing
+		sudo ufw allow 22/tcp comment "SSH"
+		sudo ufw enable
+		
+	# disable core dumps
+		echo "[Coredump]" | sudo tee /etc/systemd/coredump.conf
+		echo "Storage=none" | sudo tee -a /etc/systemd/coredump.conf
+		echo "ProcessSizeMax=0" | sudo tee -a /etc/systemd/coredump.conf
+		echo "ulimit -c 0" | sudo tee -a /etc/profile
+		sudo -i 's/#\*[[:blank:]]*soft[[:blank:]]*core[[:blank:]]*0/* soft core 0/' /etc/security/limits.conf
+		sudo sed -i '/\* soft core 0/a \* hard core 0' /etc/security/limits.conf
+
+	# enable DNSSEC
+		sudo mkdir -p /etc/systemd/resolved.conf.d
+		echo "[Resolve]" | sudo tee /etc/systemd/resolved.conf.d/dnssec.conf
+		echo "DNSSEC=true" | sudo tee -a /etc/systemd/resolved.conf.d/dnssec.conf
+		sudo systemctl restart systemd-resolved
+
+	# kernel hardening
+		# disable unused kernel modules
+		if lsmod | grep -wq "dccp"; then sudo rmmod dccp; else echo "Module dccp is not currently loaded. Disabling."; fi
+		echo "install dccp /bin/true" | sudo tee /etc/modprobe.d/dccp.conf
+		echo "blacklist dccp" | sudo tee -a /etc/modprobe.d/blacklist.conf
+
+		if lsmod | grep -wq "sctp"; then sudo rmmod sctp; else echo "Module sctp is not currently loaded. Disabling."; fi
+		echo "install sctp /bin/true" | sudo tee /etc/modprobe.d/sctp.conf
+		echo "blacklist sctp" | sudo tee -a /etc/modprobe.d/blacklist.conf
+
+		if lsmod | grep -wq "rds"; then sudo rmmod rds; else echo "Module rds is not currently loaded. Disabling."; fi
+		echo "install rds /bin/true" | sudo tee /etc/modprobe.d/rds.conf
+		echo "blacklist rds" | sudo tee -a /etc/modprobe.d/blacklist.conf
+
+		if lsmod | grep -wq "tipc"; then sudo rmmod tipc; else echo "Module tipc is not currently loaded. Disabling."; fi
+		echo "install tipc /bin/true" | sudo tee /etc/modprobe.d/tipc.conf
+		echo "blacklist tipc" | sudo tee -a /etc/modprobe.d/blacklist.conf
+
+		# tune kernel parameters
+		sudo rm -rf /etc/sysctl.conf
+		echo "dev.tty.ldisc_autoload = 0" | sudo tee -a /etc/sysctl.conf
+		echo "fs.protected_fifos = 2" | sudo tee -a /etc/sysctl.conf
+		echo "fs.protected_hardlinks = 1" | sudo tee -a /etc/sysctl.conf
+		echo "fs.protected_regular = 2" | sudo tee -a /etc/sysctl.conf
+		echo "fs.protected_symlinks = 1" | sudo tee -a /etc/sysctl.conf
+		echo "fs.suid_dumpable = 0" | sudo tee -a /etc/sysctl.conf
+		echo "kernel.core_pattern = |/bin/true" | sudo tee -a /etc/sysctl.conf
+		echo "kernel.core_uses_pid = 1" | sudo tee -a /etc/sysctl.conf
+		echo "kernel.ctrl-alt-del = 0" | sudo tee -a /etc/sysctl.conf
+		echo "kernel.dmesg_restrict = 1" | sudo tee -a /etc/sysctl.conf
+		echo "kernel.kptr_restrict = 2" | sudo tee -a /etc/sysctl.conf
+		# Do not set kernel.modules_disabled to 1. Systems installed on a USB device will fail to boot.
+		echo "kernel.perf_event_paranoid = 3" | sudo tee -a /etc/sysctl.conf
+		echo "kernel.randomize_va_space = 2" | sudo tee -a /etc/sysctl.conf
+		echo "kernel.unprivileged_bpf_disabled = 1" | sudo tee -a /etc/sysctl.conf
+		echo "net.core.bpf_jit_harden = 2" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.all.accept_redirects = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.all.accept_source_route = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.all.bootp_relay = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.all.forwarding = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.all.log_martians = 1" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.all.proxy_arp = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.all.rp_filter = 1" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.all.send_redirects = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.default.accept_redirects = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.default.accept_source_route = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.conf.default.log_martians = 1" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.icmp_echo_ignore_broadcasts = 1" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.icmp_ignore_bogus_error_responses = 1" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.tcp_syncookies = 1" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv4.tcp_timestamps = 1" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv6.conf.all.accept_redirects = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv6.conf.all.accept_source_route = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv6.conf.default.accept_redirects = 0" | sudo tee -a /etc/sysctl.conf
+		echo "net.ipv6.conf.default.accept_source_route = 0" | sudo tee -a /etc/sysctl.conf
+		sudo sysctl -p /etc/sysctl.conf
+
+	# permissions hardening
+		# umask
+		echo "umask 027" | sudo tee -a /etc/bash.bashrc
+		echo "umask 027" | sudo tee -a /etc/profile
+		sudo sed -i 's/UMASK[[:blank:]]*022/UMASK 027/' /etc/login.defs
+
+		# directories and files
+		if [[ -d "/etc/cron.d" ]]; then sudo chmod 700 /etc/cron.d; else echo "/etc/cron.d does not exist."; fi
+		if [[ -d "/etc/cron.daily" ]]; then sudo chmod 700 /etc/cron.daily; else echo "/etc/cron.daily does not exist."; fi
+		if [[ -d "/etc/cron.hourly" ]]; then sudo chmod 700 /etc/cron.hourly; else echo "/etc/cron.hourly does not exist."; fi
+		if [[ -d "/etc/cron.weekly" ]]; then sudo chmod 700 /etc/cron.weekly; else echo "/etc/cron.weekly does not exist."; fi
+		if [[ -d "/etc/cron.monthly" ]]; then sudo chmod 700 /etc/cron.monthly; else echo "/etc/cron.monthly does not exist."; fi
+		if [[ -d "/etc/sudoers.d" ]]; then sudo chmod 750 /etc/sudoers.d; else echo "/etc/sudoers.d does not exist."; fi
+		if [[ -f "/etc/crontab" ]]; then sudo chmod 600 /etc/crontab; else echo "/etc/crontab does not exist."; fi
+		if [[ -f "/boot/grub/grub.cfg" ]]; then sudo chmod 600 /boot/grub/grub.cfg; else echo "/boot/grub/grub.cfg does not exist."; fi
+		if [[ -f "/etc/ssh/sshd_config" ]]; then sudo chmod 600 /etc/ssh/sshd_config; else echo "/etc/ssh/sshd_config does not exist."; fi
+		if [[ -f "/usr/bin/as" ]]; then sudo chmod 700 /usr/bin/as; else echo "/usr/bin/as does not exist."; fi
+			
+	# set TMOUT length
+		echo "TMOUT=900" | sudo tee -a /etc/profile
+		echo "readonly TMOUT" | sudo tee -a /etc/profile
+		echo "export TMOUT" | sudo tee -a /etc/profile
