@@ -6,6 +6,7 @@ passwd:
       password_hash: ""
 kernel_arguments:
   should_exist:
+    - ipv6.disable=1
     - mitigations=auto,nosmt
     - tsx=auto
 systemd:
