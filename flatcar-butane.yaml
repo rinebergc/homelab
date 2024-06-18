@@ -38,7 +38,7 @@ systemd:
         ExecStartPre=-/usr/bin/docker kill portainer
         ExecStartPre=-/usr/bin/docker rm portainer
         ExecStartPre=/usr/bin/docker pull portainer/portainer
-        ExecStart=/usr/bin/docker run --name portainer -p 9443:9443 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+        ExecStart=/usr/bin/docker run --name portainer -p 9443:9443 -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer/data:/data portainer/portainer
         ExecStop=/usr/bin/docker stop portainer
         Restart=always
         RestartSec=5s

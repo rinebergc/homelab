@@ -22,7 +22,7 @@ services:
         !op3
       SNOOPER_ENABLED: FALSE
     volumes:
-      - "./minecraft/minecraft-server-fabric:/data"
+      - "/opt/minecraft/minecraft-server-fabric:/data"
   neoforge:
     image: itzg/minecraft-server
     container_name: minecraft-server-neoforge
@@ -44,7 +44,7 @@ services:
         !op3
       SNOOPER_ENABLED: FALSE
     volumes:
-      - "./minecraft/minecraft-server-neoforge:/data"
+      - "/opt/minecraft/minecraft-server-neoforge:/data"
   cloudflared:
     image: cloudflare/cloudflared
     container_name: cloudflare-tunnel
