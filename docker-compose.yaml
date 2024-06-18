@@ -41,7 +41,7 @@ services:
       - "/opt/minecraft/minecraft-server-neoforge:/data"
   cloudflared:
     image: cloudflare/cloudflared
-    container_name: cloudflare-tunnel
+    container_name: cloudflared
     restart: unless-stopped
     command: tunnel --no-autoupdate run
     environment:
@@ -49,6 +49,7 @@ services:
       TUNNEL_TOKEN: $TOKEN
   router:
     image: itzg/mc-router
+    container_name: mc-router
     depends_on:
       - fabric
       - neoforge
