@@ -9,17 +9,15 @@ services:
       MEMORY: 16G
       USE_AIKAR_FLAGS: TRUE
       ENABLE_ROLLING_LOGS: TRUE
-      TZ: !timezone
+      TZ: Etc/UTC
       EULA: "TRUE"
       MOD_PLATFORM: MODRINTH
       MODRINTH_MODPACK: !modpack
       MODRINTH_LOADER: fabric
-      LEVEL_TYPE: !leveltype
-      MOTD: !motd1
+      LEVEL_TYPE: BetterX
+      MOTD: !motd
       OPS: |
-        !op1
-        !op2
-        !op3
+        !opuuid
       SNOOPER_ENABLED: FALSE
     volumes:
       - "/opt/minecraft/minecraft-server-fabric:/data"
@@ -31,17 +29,15 @@ services:
       MEMORY: 16G
       USE_AIKAR_FLAGS: TRUE
       ENABLE_ROLLING_LOGS: TRUE
-      TZ: !timezone
+      TZ: Etc/UTC
       EULA: "TRUE"
       MOD_PLATFORM: MODRINTH
       MODRINTH_MODPACK: !modpack
       MODRINTH_LOADER: neoforge
-      LEVEL_TYPE: !leveltype
-      MOTD: !motd2
+      LEVEL_TYPE: BetterX
+      MOTD: !motd
       OPS: |
-        !op1
-        !op2
-        !op3
+        !opuuid
       SNOOPER_ENABLED: FALSE
     volumes:
       - "/opt/minecraft/minecraft-server-neoforge:/data"
@@ -51,7 +47,7 @@ services:
     restart: unless-stopped
     command: tunnel --no-autoupdate run
     environment:
-      TZ: !timezone
+      TZ: Etc/UTC
       TUNNEL_TOKEN: !token
   router:
     image: itzg/mc-router
