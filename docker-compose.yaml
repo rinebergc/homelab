@@ -5,8 +5,6 @@ services:
     image: itzg/minecraft-server
     container_name: minecraft-server-fabric
     restart: unless-stopped
-    env_file:
-      - services.env
     environment:
       MEMORY: 16G
       USE_AIKAR_FLAGS: TRUE
@@ -27,8 +25,6 @@ services:
     image: itzg/minecraft-server
     container_name: minecraft-server-neoforge
     restart: unless-stopped
-    env_file:
-      - services.env
     environment:
       MEMORY: 16G
       USE_AIKAR_FLAGS: TRUE
@@ -49,8 +45,6 @@ services:
     image: cloudflare/cloudflared
     container_name: cloudflared
     restart: unless-stopped
-    env_file:
-      - services.env
     command: tunnel --no-autoupdate run
     environment:
       TZ: Etc/UTC
@@ -60,8 +54,6 @@ services:
     image: itzg/mc-router
     container_name: mc-router
     restart: unless-stopped
-    env_file:
-      - services.env
     depends_on:
       - minecraft-server-fabric
       - minecraft-server-neoforge
