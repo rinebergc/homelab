@@ -1,2 +1,2 @@
-## rinebergc/devops
+## rinebergc/homelab
 Homelab Configuration Repo
