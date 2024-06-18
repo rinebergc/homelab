@@ -47,18 +47,3 @@ services:
     environment:
       TZ: Etc/UTC
       TUNNEL_TOKEN: $TOKEN
-
-  router:
-    image: itzg/mc-router
-    container_name: mc-router
-    restart: unless-stopped
-    depends_on:
-      - minecraft-server-fabric
-      - minecraft-server-neoforge
-      - cloudflared
-    environment:
-      MAPPING: |
-        $FABRIC_SERVER=fabric:25565
-        $NEOFORGE_SERVER=neoforge:25565
-    ports:
-      - "25565:25565"
