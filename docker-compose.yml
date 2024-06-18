@@ -4,18 +4,18 @@ services:
     container_name: minecraft-server-fabric
     restart: unless-stopped
     environment:
+      TZ: Etc/UTC
       MEMORY: 16G
       USE_AIKAR_FLAGS: TRUE
       ENABLE_ROLLING_LOGS: TRUE
-      TZ: Etc/UTC
-      EULA: "TRUE"
+      EULA: TRUE
+      SNOOPER_ENABLED: FALSE
       MOD_PLATFORM: MODRINTH
       MODRINTH_MODPACK: $MODPACK
       MODRINTH_VERSION: $FABRIC_MODRINTH_VERSION
       LEVEL_TYPE: $LEVEL_TYPE
       MOTD: $FABRIC_MOTD
       OPS: $OPS
-      SNOOPER_ENABLED: FALSE
     volumes:
       - "/opt/minecraft/minecraft-server-fabric:/data"
 
@@ -24,18 +24,18 @@ services:
     container_name: minecraft-server-neoforge
     restart: unless-stopped
     environment:
+      TZ: Etc/UTC
       MEMORY: 16G
       USE_AIKAR_FLAGS: TRUE
       ENABLE_ROLLING_LOGS: TRUE
-      TZ: Etc/UTC
-      EULA: "TRUE"
+      EULA: TRUE
+      SNOOPER_ENABLED: FALSE
       MOD_PLATFORM: MODRINTH
       MODRINTH_MODPACK: $MODPACK
       MODRINTH_VERSION: $NEOFORGE_MODRINTH_VERSION
       LEVEL_TYPE: $LEVEL_TYPE
       MOTD: $NEOFORGE_MOTD
       OPS: $OPS
-      SNOOPER_ENABLED: FALSE
     volumes:
       - "/opt/minecraft/minecraft-server-neoforge:/data"
 
