@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   minecraft-server-fabric:
     image: itzg/minecraft-server
