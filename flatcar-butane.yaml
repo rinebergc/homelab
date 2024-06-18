@@ -25,6 +25,26 @@ systemd:
           contents: |
             [Service]
             LimitMEMLOCK=infinity
+    - name: portainer.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Portainer
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStartPre=-/usr/bin/docker kill portainer
+        ExecStartPre=-/usr/bin/docker rm portainer
+        ExecStartPre=/usr/bin/docker pull portainer/portainer
+        ExecStart=/usr/bin/docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+        ExecStop=/usr/bin/docker stop portainer
+        Restart=always
+        RestartSec=5s
+
+        [Install]
+        WantedBy=multi-user.target
     - name: sshd.service
       mask: true
     - name: sshd.socket
