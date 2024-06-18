@@ -35,7 +35,7 @@ systemd:
 
         [Service]
         TimeoutStartSec=0
-        ExecStart=/usr/bin/docker run -p 9443:9443 --name portainer -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer/data:/data portainer/portainer-ee:latest
+        ExecStart=/usr/bin/docker run --rm --name portainer -p 9443:9443 -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer/data:/data portainer/portainer-ee:latest
         Restart=always
         RestartSec=5s
 
