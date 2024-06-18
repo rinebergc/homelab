@@ -36,8 +36,6 @@ systemd:
         [Service]
         TimeoutStartSec=0
         ExecStartPre=-/usr/bin/docker kill portainer-ee
-        ExecStartPre=-/usr/bin/docker rm portainer-ee
-        ExecStartPre=/usr/bin/docker pull portainer/portainer-ee:latest
         ExecStart=/usr/bin/docker run -p 9443:9443 --name portainer -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer/data:/data portainer/portainer-ee:latest
         ExecStop=/usr/bin/docker stop portainer-ee
         Restart=always
