@@ -22,6 +22,7 @@ services:
       SNOOPER_ENABLED: FALSE
     volumes:
       - "/opt/minecraft/minecraft-server-fabric:/data"
+
   minecraft-server-neoforge:
     image: itzg/minecraft-server
     container_name: minecraft-server-neoforge
@@ -43,6 +44,7 @@ services:
       SNOOPER_ENABLED: FALSE
     volumes:
       - "/opt/minecraft/minecraft-server-neoforge:/data"
+
   cloudflared:
     image: cloudflare/cloudflared
     container_name: cloudflared
@@ -53,6 +55,7 @@ services:
     environment:
       TZ: Etc/UTC
       TUNNEL_TOKEN: $TOKEN
+
   router:
     image: itzg/mc-router
     container_name: mc-router
