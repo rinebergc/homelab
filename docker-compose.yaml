@@ -12,12 +12,11 @@ services:
       TZ: Etc/UTC
       EULA: "TRUE"
       MOD_PLATFORM: MODRINTH
-      MODRINTH_MODPACK: !modpack
+      MODRINTH_MODPACK: $MODPACK
       MODRINTH_LOADER: fabric
-      LEVEL_TYPE: BetterX
-      MOTD: !motd
-      OPS: |
-        !opuuid
+      LEVEL_TYPE: $FABRIC_LEVEL_TYPE
+      MOTD: $FABRIC_MOTD
+      OPS: $OPS
       SNOOPER_ENABLED: FALSE
     volumes:
       - "/opt/minecraft/minecraft-server-fabric:/data"
@@ -32,12 +31,11 @@ services:
       TZ: Etc/UTC
       EULA: "TRUE"
       MOD_PLATFORM: MODRINTH
-      MODRINTH_MODPACK: !modpack
+      MODRINTH_MODPACK: $MODPACK
       MODRINTH_LOADER: neoforge
-      LEVEL_TYPE: BetterX
-      MOTD: !motd
-      OPS: |
-        !opuuid
+      LEVEL_TYPE: $NEOFORGE_LEVEL_TYPE
+      MOTD: $NEOFORGE_MOTD
+      OPS: $OPS
       SNOOPER_ENABLED: FALSE
     volumes:
       - "/opt/minecraft/minecraft-server-neoforge:/data"
@@ -48,7 +46,7 @@ services:
     command: tunnel --no-autoupdate run
     environment:
       TZ: Etc/UTC
-      TUNNEL_TOKEN: !token
+      TUNNEL_TOKEN: $TOKEN
   router:
     image: itzg/mc-router
     depends_on:
@@ -57,7 +55,7 @@ services:
       - cloudflared
     environment:
       MAPPING: |
-        !server1=fabric:25565
-        !server2=neoforge:25565
+        $FABRIC_SERVER=fabric:25565
+        $NEOFORGE_SERVER=neoforge:25565
     ports:
       - "25565:25565"
