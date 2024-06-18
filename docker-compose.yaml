@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  fabric:
+  minecraft-server-fabric:
     image: itzg/minecraft-server
     container_name: minecraft-server-fabric
     restart: unless-stopped
@@ -20,7 +20,7 @@ services:
       SNOOPER_ENABLED: FALSE
     volumes:
       - "/opt/minecraft/minecraft-server-fabric:/data"
-  neoforge:
+  minecraft-server-neoforge:
     image: itzg/minecraft-server
     container_name: minecraft-server-neoforge
     restart: unless-stopped
@@ -51,8 +51,8 @@ services:
     image: itzg/mc-router
     container_name: mc-router
     depends_on:
-      - fabric
-      - neoforge
+      - minecraft-server-fabric
+      - minecraft-server-neoforge
       - cloudflared
     environment:
       MAPPING: |
