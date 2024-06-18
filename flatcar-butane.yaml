@@ -3,7 +3,7 @@ version: 1.0.0
 passwd:
   users:
     - name: core
-      password_hash: "ADD PASSWORD HASH HERE"
+      password_hash: ""
 kernel_arguments:
   should_exist:
     - ipv6.disable=1
@@ -38,7 +38,7 @@ systemd:
         ExecStartPre=-/usr/bin/docker kill portainer
         ExecStartPre=-/usr/bin/docker rm portainer
         ExecStartPre=/usr/bin/docker pull portainer/portainer
-        ExecStart=/usr/bin/docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
+        ExecStart=/usr/bin/docker run -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer
         ExecStop=/usr/bin/docker stop portainer
         Restart=always
         RestartSec=5s
