@@ -8,7 +8,7 @@ passwd:
 kernel_arguments:
   should_exist:
     - ipv6.disable=1
-    - flatcar.autologin
+    # - flatcar.autologin
     - mitigations=auto,nosmt
     - tsx=auto
   should_not_exist:
