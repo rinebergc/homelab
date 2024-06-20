@@ -3,7 +3,8 @@ version: 1.0.0
 passwd:
   users:
     - name: core
-      password_hash:
+      password_hash: "$6$dL2EUH0onVz7oYT6$0PTBgLeLo4f18JgyXWCym5SxtSGBmpNNKm86G89eZ8z1LLv.jocM1ybaAKTOCr6x8YcOmPonoVGqmmoYL67bl."
+      # password_hash == core
 kernel_arguments:
   should_exist:
     - ipv6.disable=1
