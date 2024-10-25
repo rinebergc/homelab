@@ -1,4 +1,4 @@
-## Homelab Configuration Repo
+## Home Server Configuration Repo
 
 #### Provisioning a new Flatcar server with Portainer:
 - wget https://raw.githubusercontent.com/rinebergc/homelab/main/flatcar-butane.yaml
