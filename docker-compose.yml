@@ -5,39 +5,40 @@ services:
     restart: unless-stopped
     environment:
       TZ: Etc/UTC
-      MEMORY: 16G
+      MEMORY: 12G
       USE_AIKAR_FLAGS: TRUE
       ENABLE_ROLLING_LOGS: TRUE
       EULA: TRUE
-      SNOOPER_ENABLED: FALSE
-      MOD_PLATFORM: MODRINTH
-      MODRINTH_MODPACK: $MODPACK
-      MODRINTH_VERSION: $FABRIC_MODRINTH_VERSION
+      DIFFICULTY: normal
       LEVEL_TYPE: $LEVEL_TYPE
       MOTD: $FABRIC_MOTD
       OPS: $OPS
+      MOD_PLATFORM: MODRINTH
+      MODRINTH_MODPACK: https://modrinth.com/modpack/rine-time/version/1.0.7
     volumes:
       - "/opt/minecraft/minecraft-server-fabric:/data"
 
-  minecraft-server-neoforge:
+  minecraft-server-forge:
     image: itzg/minecraft-server
-    container_name: minecraft-server-neoforge
+    container_name: minecraft-server-forge
     restart: unless-stopped
     environment:
       TZ: Etc/UTC
-      MEMORY: 16G
+      MEMORY: 12G
       USE_AIKAR_FLAGS: TRUE
       ENABLE_ROLLING_LOGS: TRUE
       EULA: TRUE
-      SNOOPER_ENABLED: FALSE
-      MOD_PLATFORM: MODRINTH
-      MODRINTH_MODPACK: $MODPACK
-      MODRINTH_VERSION: $NEOFORGE_MODRINTH_VERSION
+      DIFFICULTY: hard
       LEVEL_TYPE: $LEVEL_TYPE
-      MOTD: $NEOFORGE_MOTD
+      MOTD: $FORGE_MOTD
       OPS: $OPS
+      MOD_PLATFORM: MODRINTH
+      MODRINTH_FORCE_SYNCHRONIZE: TRUE
+      MODRINTH_MODPACK: https://modrinth.com/modpack/rine-time
+      MODRINTH_EXCLUDE_FILES: $FORGE_EXCLUSIONS
+      MODRINTH_FORCE_INCLUDE_FILES: $FORGE_INCLUSIONS
     volumes:
-      - "/opt/minecraft/minecraft-server-neoforge:/data"
+      - "/opt/minecraft/minecraft-server-forge:/data"
 
   cloudflared:
     image: cloudflare/cloudflared
