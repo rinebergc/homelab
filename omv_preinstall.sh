@@ -19,4 +19,4 @@ echo "Interface Name: ${INTERFACE}"
 echo "MAC Address: ${MAC}"
 echo -e "[Match]\nMACAddress=${MAC}\n[Link]\nName=${INTERFACE}" > /etc/systemd/network/10-persistent-eth0.link
 
-sudo shutdown -r now &>/dev/null
+sudo systemctl --no-wall reboot
