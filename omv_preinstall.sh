@@ -27,6 +27,9 @@ sudo raspi-config nonint do_net_names 0 # Enable predictable network interface n
 
 sudo systemctl disable hciuart # Disable the service that initalizes the BT modem, so it does not connect to the UART
 
+wget https://github.com/radxa/rockpi-penta/releases/download/v0.2.2/rockpi-penta-0.2.2.deb # Download the Penta TopHAT drivers
+sudo apt install -y ./rockpi-penta-0.2.2.deb
+
 echo -e "\nThe system will restart in 5 seconds.\n"
 sleep 5
-sudo systemctl --no-wall reboot
+# sudo systemctl --no-wall reboot
