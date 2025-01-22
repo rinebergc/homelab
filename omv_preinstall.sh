@@ -9,25 +9,18 @@
 export DEBIAN_FRONTEND=noninteractive
 export APT_LISTCHANGES_FRONTEND=none
 
-sudo apt update -q && sudo apt upgrade -q=2 --no-install-recommends # Retrieve and install available package upgrades
-
-sudo raspi-config nonint do_boot_splash 1 # Disable the splash screen displayed at boot time
 sudo raspi-config nonint do_leds 1 # Keep the power LED lit at all times, do not flash for disk activity
 sudo raspi-config nonint do_net_names 0 # Enable predictable network interface names
 
-echo "dtoverlay=disable-bt-pi5" | sudo tee -a /boot/firmware/config.txt  # Disable Bluetooth
-echo "dtoverlay=disable-wifi-pi5" | sudo tee -a /boot/firmware/config.txt  # Disable Wi-Fi
+echo -n " ipv6.disable=1" | sudo tee -a /boot/firmware/cmdline.txt >/dev/null # Disable IPv6
 
-INTERFACE="enx6c1ff7171aa4"
-DRIVER="r8152"
-MAC="6c:1f:f7:17:1a:a4"
+sudo nmcli con delete "Wired connection 1"
+sudo nmcli con modify "Wired connection 2" connection.autoconnect true
 
-echo -e "\nInterface Name: ${INTERFACE}"
-echo "Driver: ${DRIVER}"
-echo -e "MAC Address: ${MAC}\n"
+sudo systemctl disable hciuart # Disable the service that initalizes the BT modem, so it does not connect to the UART
 
-echo ""
-echo -e "[Match]\nMACAddress=${MAC}\nDriver=${DRIVER}\n[Link]\nName=${INTERFACE}" > /etc/systemd/network/10-persistent-eth0.link
+sudo apt update && sudo apt upgrade -y --no-install-recommends # Retrieve and install available package upgrades
 
-echo "The system will restart immediately."
+echo "The system will restart in 5 seconds."
+sleep 5
 sudo systemctl --no-wall reboot
