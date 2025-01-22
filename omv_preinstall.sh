@@ -10,7 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 export APT_LISTCHANGES_FRONTEND=none
 
 sudo apt update && sudo apt upgrade -y --no-install-recommends
-sudo raspi-config do_net_names 0
+sudo raspi-config nonint do_net_names 0
 
 INTERFACE="enx6c1ff7171aa4"
 MAC="6c:1f:f7:17:1a:a4"
