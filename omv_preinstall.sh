@@ -13,11 +13,11 @@ sudo apt update && sudo apt upgrade -y --no-install-recommends # Retrieve and in
 
 echo " ipv6.disable=1" | sudo tee -a /boot/firmware/cmdline.txt >/dev/null # Disable IPv6
 
-if [ nmcli -t -f NAME con | grep -Fxq "Wired connection 1" ]; then
+if [nmcli -t -f NAME con | grep -Fxq "Wired connection 1"]; then
   sudo nmcli con delete "Wired connection 1"
 fi
 
-if [ nmcli -t -f NAME con | grep -Fxq "Wired connection 2" ]; then
+if [nmcli -t -f NAME con | grep -Fxq "Wired connection 2"]; then
   sudo nmcli con modify "Wired connection 2" connection.autoconnect true
 else
   echo "Wired connection 2 does not exist"
