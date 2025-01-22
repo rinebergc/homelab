@@ -4,7 +4,7 @@
 # Based on https://raw.githubusercontent.com/OpenMediaVault-Plugin-Developers/installScript/master/preinstall
 # https://wiki.omv-extras.org/doku.php?id=omv7:raspberry_pi_install
 
-# wget -O - https://github.com/rinebergc/homelab/edit/main/omv_preinstall.sh | sudo bash
+# wget -O - https://raw.githubusercontent.com/rinebergc/homelab/main/omv_preinstall.sh | sudo bash
 
 export DEBIAN_FRONTEND=noninteractive
 export APT_LISTCHANGES_FRONTEND=none
