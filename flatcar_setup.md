@@ -1,5 +1,3 @@
-## Home Server Configuration Repo
-
 #### Provisioning a new Flatcar server with Portainer:
 - wget https://raw.githubusercontent.com/rinebergc/homelab/main/flatcar-butane.yaml
 - cat flatcar-butane.yaml | docker run --rm -i quay.io/coreos/butane:latest > ignition.json
