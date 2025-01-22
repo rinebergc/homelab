@@ -15,10 +15,9 @@ sudo raspi-config nonint do_net_names 0
 INTERFACE="enx6c1ff7171aa4"
 MAC="6c:1f:f7:17:1a:a4"
 
-echo -en "\n"
-echo -e "Interface Name: ${INTERFACE}"
-echo -e "MAC Address: ${MAC}"
-echo -en "\n"
+echo -e ""
+echo "Interface Name: ${INTERFACE}"
+echo "MAC Address: ${MAC}"
 echo -e "[Match]\nMACAddress=${MAC}\n[Link]\nName=${INTERFACE}" > /etc/systemd/network/10-persistent-eth0.link
 
-sudo reboot
+sudo reboot --verbose
