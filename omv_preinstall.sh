@@ -13,11 +13,11 @@ sudo apt update && sudo apt upgrade -y --no-install-recommends # Retrieve and in
 
 echo " ipv6.disable=1" | sudo tee -a /boot/firmware/cmdline.txt >/dev/null # Disable IPv6
 
-if nmcli -t -f NAME con | grep -Fxq "Wired connection 1"; then
+if nmcli -t -f NAME con | grep -Fq "Wired connection 1"; then
   sudo nmcli con delete "Wired connection 1"
 fi
 
-if nmcli -t -f NAME con | grep -Fxq "Wired connection 2"; then
+if nmcli -t -f NAME con | grep -Fq "Wired connection 2"; then
   sudo nmcli con modify "Wired connection 2" connection.autoconnect true
 else
   echo "Wired connection 2 does not exist"
@@ -27,7 +27,7 @@ sudo raspi-config nonint do_net_names 0 # Enable predictable network interface n
 
 sudo systemctl disable hciuart # Disable the service that initalizes the BT modem, so it does not connect to the UART
 
-if ! dpkg-query -W rockpi-penta | grep -Fxq "rockpi-penta"; then
+if ! dpkg-query -W rockpi-penta | grep -Fq "rockpi-penta"; then
   wget https://github.com/radxa/rockpi-penta/releases/download/v0.2.2/rockpi-penta-0.2.2.deb # Download the Penta TopHAT drivers
   sudo apt install -y ./rockpi-penta-0.2.2.deb
 fi
