@@ -4,6 +4,8 @@
 # Additional overlays and parameters are documented
 # /boot/firmware/overlays/README
 
+# To disable ipv6, add ipv6.disable=1 to /boot/firmware/cmdline.txt
+
 # Disable the rainbow splash screen shown on boot.
 disable_splash=1
 
