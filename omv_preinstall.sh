@@ -19,6 +19,6 @@ echo "Interface Name: ${INTERFACE}"
 echo "MAC Address: ${MAC}"
 echo -e "[Match]\nMACAddress=${MAC}\n[Link]\nName=${INTERFACE}" > /etc/systemd/network/10-persistent-eth0.link
 
-read -p "Press enter to reboot..."
+read -rs -n 1 -p "Press any key to to reboot..."
 
 sudo reboot
