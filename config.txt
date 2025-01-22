@@ -4,23 +4,6 @@
 # Additional overlays and parameters are documented
 # /boot/firmware/overlays/README
 
-[pi5]
-# Disable Bluetooth
-disable-bt-pi5
-
-# Disable Wi-Fi
-disable-wifi-pi5
-
-# Enable the external PCIe connector
-dtparam=pciex1
-
-# Allow the external PCIe connector to run at Gen 3.0 speeds
-dtparam=pciex1_gen=3
-
-[All]
-# Run in 64-bit mode
-arm_64bit=1
-
 # Run as fast as the firmware/board allows
 arm_boost=1
 
@@ -40,7 +23,22 @@ disable_splash=1
 # Do not auto-detect/load display overlays
 display_auto_detect=0
 
+# Disable Bluetooth
+dtoverlay=disable-bt-pi5
+
+# Disable Wi-Fi
+dtoverlay=disable-wifi-pi5
+
 # Disable HDMI
 dtoverlay=vc4-kms-v3d,nohdmi
+
+# Disable audio (does not load snd_bcm2835)
+dtparam=audio=off
+
+# Enable the external PCIe connector
+dtparam=pciex1
+
+# Allow the external PCIe connector to run at Gen 3.0 speeds
+dtparam=pciex1_gen=3
 
 # To disable ipv6, add ipv6.disable=1 to /boot/firmware/cmdline.txt
