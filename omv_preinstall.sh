@@ -12,7 +12,7 @@ export APT_LISTCHANGES_FRONTEND=none
 echo "Checking for available package upgrades..."
 sudo apt update && sudo apt upgrade -y --no-install-recommends # Retrieve and install available package upgrades
 
-if ! grep -Fq "ipv6.disable=1"; then
+if ! grep -Fq "ipv6.disable=1" /boot/firmware/cmdline.txt; then
   echo "Appending ipv6.disable=1 to cmdline.txt..."
   echo " ipv6.disable=1" | sudo tee -a /boot/firmware/cmdline.txt # Disable IPv6
 fi
@@ -27,9 +27,9 @@ if nmcli -t -f NAME con | grep -Fq "Wired connection 2"; then
   sudo nmcli con modify Wired\ connection\ 2 connection.autoconnect-retries 0
 fi
 
-if sudo systemctl is-enabled hciuart; then
+if sudo systemctl is-enabled hciuart | grep -Fq "Enabled"; then
   echo "Disabling hciuart..."
-  if sudo systemctl is-active hciuart; then
+  if sudo systemctl is-active hciuart | grep -Fq "Active"; then
     sudo systemctl stop hciuart
   fi
   sudo systemctl disable hciuart # Disable the service for initalizing/configuring Bluetooth modems
