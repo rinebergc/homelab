@@ -39,7 +39,7 @@ if [[ "$(systemctl is-enabled hciuart)" == "Enabled" ]]; then
   systemctl disable hciuart
 fi
 
-if ! dpkg-query -W rockpi-penta | grep -Fq "rockpi-penta"; then
+if ! dpkg-query -W rockpi-penta | grep -Fq "dpkg-query: no packages found matching rockpi-penta"; then
   echo "Installing Penta TopHAT drivers..."
   # Download and install drivers for the Radxa Penta TopHAT
   wget https://github.com/radxa/rockpi-penta/releases/download/v0.2.2/rockpi-penta-0.2.2.deb
