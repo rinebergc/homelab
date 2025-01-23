@@ -9,29 +9,38 @@
 export DEBIAN_FRONTEND=noninteractive
 export APT_LISTCHANGES_FRONTEND=none
 
-sudo apt update && sudo apt upgrade -y --no-install-recommends # Retrieve and install available package upgrades
+echo "Checking for available package upgrades..."
+sudo apt update -q=2 && sudo apt upgrade -q=2 --no-install-recommends # Retrieve and install available package upgrades
 
-echo " ipv6.disable=1" | sudo tee -a /boot/firmware/cmdline.txt >/dev/null # Disable IPv6
-
-if nmcli -t -f NAME con | grep -Fq "Wired connection 1"; then
-  sudo nmcli con delete "Wired connection 1"
+if ! grep -Fq "ipv6.disable=1"; then
+  echo "Appending ipv6.disable=1 to cmdline.txt..."
+  echo " ipv6.disable=1" | sudo tee -a /boot/firmware/cmdline.txt >/dev/null # Disable IPv6
 fi
 
 if nmcli -t -f NAME con | grep -Fq "Wired connection 2"; then
-  sudo nmcli con modify "Wired connection 2" connection.autoconnect true
-else
-  echo "Wired connection 2 does not exist"
+  echo "Configuring LAN..."
+  if ! nmcli -t -f NAME con | grep -Fq "enx6c1ff7171aa4"; then
+    sudo raspi-config nonint do_net_names 0 # Enable predictable network interface names
+  fi
+  sudo nmcli con modify Wired\ connection\ 2 connection.autoconnect true
+  sudo nmcli con modify Wired\ connection\ 2 connection.autoconnect-priority 999
+  sudo nmcli con modify Wired\ connection\ 2 connection.autoconnect-retries 0
 fi
 
-sudo raspi-config nonint do_net_names 0 # Enable predictable network interface names
-
-sudo systemctl disable hciuart # Disable the service that initalizes the BT modem, so it does not connect to the UART
+if sudo systemctl is-enabled hciuart; then
+  echo "Disabling hciuart..."
+  if sudo systemctl is-active hciuart; then
+    sudo systemctl stop hciuart >/dev/null
+  fi
+  sudo systemctl disable hciuart # Disable the service for initalizing/configuring Bluetooth modems
+fi
 
 if ! dpkg-query -W rockpi-penta | grep -Fq "rockpi-penta"; then
+  echo "Installing the Penta TopHAT drivers..."
   wget https://github.com/radxa/rockpi-penta/releases/download/v0.2.2/rockpi-penta-0.2.2.deb # Download the Penta TopHAT drivers
   sudo apt install -y ./rockpi-penta-0.2.2.deb
 fi
 
 echo -e "\nThe system will restart in 5 seconds.\n"
 sleep 5
-# sudo systemctl --no-wall reboot
+sudo systemctl --no-wall reboot
