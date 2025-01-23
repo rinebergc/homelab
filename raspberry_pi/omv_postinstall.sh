@@ -22,3 +22,5 @@ zfs set com.sun:auto-snapshot:hourly=false pool1
 zfs set com.sun:auto-snapshot:daily=false pool1
 zfs set com.sun:auto-snapshot:weekly=true pool1
 zfs set com.sun:auto-snapshot:monthly=false pool1
+
+sudo apt autoremove
