@@ -32,10 +32,10 @@ fi
 if [[ "$(systemctl is-enabled hciuart)" == "Enabled" ]]; then
   echo "Disabling hciuart..."
   if [[ "$(systemctl is-active hciuart)" == "Active" ]]; then
-    # Stop hciuart.service if it is currently runnning
+    # Stop the service if it is currently runnning
     systemctl stop hciuart
   fi
-  # Disable the service for initalizing/configuring Bluetooth modems
+  # Disable hciuart (service for initalizing/configuring Bluetooth modems)
   systemctl disable hciuart
 fi
 
