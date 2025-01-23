@@ -7,7 +7,7 @@
 # Install the ZFS plugin (UI)
 
 # https://forum.openmediavault.org/index.php?thread/46136-raid10-via-zfs-plugin/
-sudo mkdir /mnt/pools/pool1
+sudo mkdir /mnt/pools
 sudo zpool create -m /mnt/pools/pool1 pool1 mirror ata-CT1000MX500SSD1_2052E4E1523C ata-CT1000MX500SSD1_2052E4E188B5 mirror ata-CT1000MX500SSD1_2052E4E188C0 ata-CT1000MX500SSD1_2052E4E188E1
 
 # https://wiki.omv-extras.org/doku.php?id=misc_docs:auto_zfs_snapshots
