@@ -26,3 +26,8 @@ sudo zfs set com.sun:auto-snapshot:monthly=false pool1
 create scheduled task "zpool trim <poolname>" run monthly
 
 sudo apt autoremove
+
+https://www.jeffgeerling.com/blog/2023/reducing-raspberry-pi-5s-power-consumption-140x
+# Lower power consumption when pi is off
+POWER_OFF_ON_HALT=1
+WAKE_ON_GPIO=0
