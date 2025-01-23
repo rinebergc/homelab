@@ -40,6 +40,7 @@ if ! dpkg-query -W rockpi-penta | grep -Fq "rockpi-penta"; then
   echo "Installing the Penta TopHAT drivers..."
   wget https://github.com/radxa/rockpi-penta/releases/download/v0.2.2/rockpi-penta-0.2.2.deb # Download the Penta TopHAT drivers
   apt install -y ./rockpi-penta-0.2.2.deb
+  rm rockpi-penta-0.2.2.deb
 fi
 
 echo -e "\nThe system will restart in 5 seconds.\n"
