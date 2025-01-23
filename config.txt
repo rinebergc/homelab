@@ -40,5 +40,3 @@ dtparam=pciex1
 
 # Allow the external PCIe connector to run at Gen 3.0 speeds
 dtparam=pciex1_gen=3
-
-# To disable ipv6, add ipv6.disable=1 to /boot/firmware/cmdline.txt
