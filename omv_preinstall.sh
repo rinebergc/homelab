@@ -17,7 +17,7 @@ if ! grep -Fq "ipv6.disable=1" /boot/firmware/cmdline.txt; then
   echo " ipv6.disable=1" | tee -a /boot/firmware/cmdline.txt # Disable IPv6
 fi
 
-if [[ "$(nmcli -t -f NAME con show --active)" != "enx6c1ff7171aa4" ]]; then
+if [[ "$(nmcli -t -f DEVICE con show --active)" != "enx6c1ff7171aa4" ]]; then
   echo "Enabling predictable network interface names..."
   raspi-config nonint do_net_names 0 # Enable predictable network interface names
 fi
@@ -28,9 +28,9 @@ nmcli con modify "${ACTIVE_CONNECTION}" connection.autoconnect true
 nmcli con modify "${ACTIVE_CONNECTION}" connection.autoconnect-priority 999
 nmcli con modify "${ACTIVE_CONNECTION}" connection.autoconnect-retries 0
 
-if [[ "$(systemctl is-enabled hciuart)" != "Enabled" ]]; then
+if [[ "$(systemctl is-enabled hciuart)" == "Enabled" ]]; then
   echo "Disabling hciuart..."
-  [[ "$(systemctl is-active hciuart)" != "Active" ]]; then
+  if [[ "$(systemctl is-active hciuart)" == "Active" ]]; then
     systemctl stop hciuart
   fi
   systemctl disable hciuart # Disable the service for initalizing/configuring Bluetooth modems
