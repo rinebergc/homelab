@@ -4,7 +4,7 @@
 # https://wiki.omv-extras.org/doku.php?id=omv7:new_user_guide#enable_smart
 # https://wiki.omv-extras.org/doku.php?id=omv7:new_user_guide#drive_self-tests
 
-# Install the ZFS plugin (UI)
+# Install the zfs plugin (UI)
 
 # https://forum.openmediavault.org/index.php?thread/46136-raid10-via-zfs-plugin/
 sudo mkdir /mnt/pools
@@ -16,11 +16,13 @@ unzip master.zip
 cd zfs-auto-snapshot-master
 sudo make install
 
-zfs set com.sun:auto-snapshot=true pool1
-zfs set com.sun:auto-snapshot:frequent=false pool1
-zfs set com.sun:auto-snapshot:hourly=false pool1
-zfs set com.sun:auto-snapshot:daily=false pool1
-zfs set com.sun:auto-snapshot:weekly=true pool1
-zfs set com.sun:auto-snapshot:monthly=false pool1
+sudo zfs set com.sun:auto-snapshot=true pool1
+sudo zfs set com.sun:auto-snapshot:frequent=false pool1
+sudo zfs set com.sun:auto-snapshot:hourly=false pool1
+sudo zfs set com.sun:auto-snapshot:daily=false pool1
+sudo zfs set com.sun:auto-snapshot:weekly=true pool1
+sudo zfs set com.sun:auto-snapshot:monthly=false pool1
+
+create scheduled task "zpool trim <poolname>" run monthly
 
 sudo apt autoremove
