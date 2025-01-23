@@ -43,7 +43,7 @@ if ! dpkg-query -W rockpi-penta | grep -Fq "dpkg-query: no packages found matchi
   echo "Installing Penta TopHAT drivers..."
   # Download and install drivers for the Radxa Penta TopHAT
   wget https://github.com/radxa/rockpi-penta/releases/download/v0.2.2/rockpi-penta-0.2.2.deb
-  apt install -y --no-install-recommends ./rockpi-penta-0.2.2.deb
+  dpkg -i -y --no-install-recommends ./rockpi-penta-0.2.2.deb
   # Remove installation package
   rm rockpi-penta-0.2.2.deb
 fi
