@@ -43,7 +43,7 @@ if ! dpkg-query -W rockpi-penta | grep -Fq "dpkg-query: no packages found matchi
   echo "Installing Penta TopHAT drivers..."
   # Download and install drivers for the Radxa Penta TopHAT
   wget https://github.com/radxa/rockpi-penta/releases/download/v0.2.2/rockpi-penta-0.2.2.deb
-  dpkg -i -y --no-install-recommends ./rockpi-penta-0.2.2.deb
+  dpkg -i ./rockpi-penta-0.2.2.deb
   # Remove installation package
   rm rockpi-penta-0.2.2.deb
 fi
@@ -51,6 +51,6 @@ fi
 # Allows users who are not logged in to run long-running services (Raspberry Pi OS Lite)
 loginctl enable-linger
 
-echo -e "\nThe system will restart in 5 seconds.\n"
-sleep 5
+echo -e "\nThe system will restart in 30 seconds.\n"
+sleep 30
 systemctl --no-wall reboot
