@@ -17,7 +17,6 @@ if ! grep -Fq 'ipv6.disable=1' /boot/firmware/cmdline.txt; then
   echo ' ipv6.disable=1' | tee -a /boot/firmware/cmdline.txt # Disable IPv6
 fi
 
-nmcli -t -f GENERAL.DEVICE,GENERAL.HWADDR,GENERAL.CONNECTION device show
 echo 'Configuring LAN...'
 ACTIVE_CONNECTION="$(nmcli -t -f NAME con show --active)"
 MAC_ADDRESS="$(nmcli -t -g GENERAL.HWADDR,GENERAL.CONNECTION device show | grep -B 1 "${ACTIVE_CONNECTION}" | sed -n '1s/\\//g;1s/://g;1p' | tr 'A-Z' 'a-z')"
