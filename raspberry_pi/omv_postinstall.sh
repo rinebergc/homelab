@@ -14,7 +14,7 @@ sudo zpool create -m /mnt/pools/pool1 pool1 mirror ata-CT1000MX500SSD1_2052E4E15
 wget https://github.com/zfsonlinux/zfs-auto-snapshot/archive/master.zip
 unzip master.zip
 cd zfs-auto-snapshot-master
-make install
+sudo make install
 
 zfs set com.sun:auto-snapshot=true pool1
 zfs set com.sun:auto-snapshot:frequent=false pool1
