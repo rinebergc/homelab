@@ -1,0 +1,8 @@
+- name: Configure host.
+  hosts: all
+  become: true
+  vars:
+
+  tasks:
+    - import_tasks: tasks/apt.yml
+      tags: ['apt']
