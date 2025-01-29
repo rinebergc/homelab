@@ -5,6 +5,7 @@
 
   pre_tasks:
     - import_tasks: tasks/pre_tasks.yml
+    - import_tasks: tasks/security.yml
 
   tasks:
     - import_tasks: tasks/common.yml
