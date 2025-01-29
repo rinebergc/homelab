@@ -8,8 +8,8 @@
 - name: Do not automatically start service(s) after installation
   ansible.builtin.copy:
     dest: /usr/sbin/policy-rc.d
-    content: "exit 101"
-    mode: "755"
+    content: 'exit 101'
+    mode: '755'
 
 - name: Install the listed package(s), ignoring install_recommends.
   ansible.builtin.apt:
