@@ -3,9 +3,6 @@
   hosts: all
   become: true
 
-  pre_tasks:
-    - import_tasks: tasks/pre_tasks.yml
-    - import_tasks: tasks/security.yml
-
   tasks:
-    - import_tasks: tasks/common.yml
+    - import_tasks: tasks/init.yml
+    - import_tasks: tasks/security.yml
