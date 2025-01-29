@@ -3,6 +3,13 @@
   ansible.builtin.apt:
     upgrade: dist
     update_cache: yes
+    cache_valid_time: 1
+
+- name: Do not automatically start service(s) after installation
+  ansible.builtin.copy:
+    dest: /usr/sbin/policy-rc.d
+    content: "exit 101"
+    mode: "755"
 
 - name: Install the listed package(s), ignoring install_recommends.
   ansible.builtin.apt:
@@ -20,9 +27,9 @@
     get_checksum: no
   register: reboot_required_file
 
-- name: Reboot the server (if required).
+- name: Reboot the server (if a reboot is required).
   ansible.builtin.reboot:
-  when: reboot_required_file.stat.exists and reboot_required_file is defined
+  when: reboot_required_file is defined and reboot_required_file.stat.exists
 
 - name: Remove dependencies that are no longer required and purge their configuration files.
   ansible.builtin.apt:
