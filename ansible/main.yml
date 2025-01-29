@@ -4,6 +4,7 @@
   become: true
 
   pre_tasks:
-    - import_tasks: tasks/init.yml
+    - import_tasks: tasks/pre_tasks.yml
 
   tasks:
+    - import_tasks: tasks/common.yml
