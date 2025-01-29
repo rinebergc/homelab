@@ -5,7 +5,7 @@
     state: present
     regexp: '^#?RootLoginAllowed'
     line: 'PermitRootLogin no'
-    backup: yes
+    backup: true
     validate: 'sshd -t -f %s'
 
 - name: SSH - Restart the SSH daemon.
