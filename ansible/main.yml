@@ -1,5 +1,5 @@
 ---
-- name: Configure host.
+- name: Configure host(s).
   hosts: all
   become: true
 
