@@ -4,7 +4,7 @@
     upgrade: dist
     update_cache: yes
     cache_valid_time: 1
-  tags: remote # If being performed locally, this task can be skipped as it will need to be done to install Ansible anyway.
+  tags: remote # If this task file is being executed locally this task can be skipped, as it will need to be done to install Ansible anyway.
 
 - name: Do not automatically start service(s) after installation
   ansible.builtin.copy:
