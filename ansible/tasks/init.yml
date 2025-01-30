@@ -4,6 +4,7 @@
     upgrade: dist
     update_cache: yes
     cache_valid_time: 1
+  tags: remote # If being performed locally, this task can be skipped as it will need to be done to install Ansible anyway.
 
 - name: Do not automatically start service(s) after installation
   ansible.builtin.copy:
@@ -17,7 +18,6 @@
       - apt-transport-https
       - ca-certificates
       - curl
-      - fail2ban
       - ufw
     install_recommends: no
 
