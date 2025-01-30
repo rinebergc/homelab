@@ -8,7 +8,7 @@ This playbook configures Debian-based distros for use in my homelab.
   1. [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) on to the target machine.
   2. Clone this repository and `cd` into it.
   3. Run `$ ansible-galaxy install -r requirements.yml` to install the required Ansible collections/roles.
-  4. Run `$ ansible-playbook main.yml -c local` to execute the playbook.
+  4. Run `$ ansible-playbook main.yml -c local --skip-tags "remote"` to execute the playbook.
 
 ### Remote (SSH)
   1. [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
