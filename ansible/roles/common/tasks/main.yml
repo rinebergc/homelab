@@ -1,4 +1,46 @@
 ---
+- name: Perform a dist-upgrade.
+  ansible.builtin.apt:
+    upgrade: dist
+    update_cache: yes
+    cache_valid_time: 1
+  tags: remote # Add a tag to skip the task when the playbook is executed locally - it’ll have already been run to install Ansible.
+
+# - name: Do not automatically start service(s) after installation
+#   ansible.builtin.copy:
+#     dest: /usr/sbin/policy-rc.d
+#     content: 'exit 101'
+#     mode: '755'
+
+- name: Install the package(s) from the var common_packages, ignoring install_recommends.
+  ansible.builtin.apt:
+    name: "{{ common_packages }}"
+    state: latest
+    install_recommends: no
+
+- name: Reboot, if required.
+  block:
+    - name: Check if a reboot is required.
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+        get_checksum: no
+      register: reboot_required_file
+
+    - name: Trigger a reboot, if one is required.
+      ansible.builtin.reboot:
+      when: reboot_required_file.stat.exists | default(false)
+
+- name: Clean Apt packages and cache.
+  block:
+    - name: Remove dependencies that are no longer required and purge their configuration files.
+      ansible.builtin.apt:
+        autoremove: yes
+        purge: true
+
+    - name: Remove package files that can no longer be downloaded from the cache.
+      ansible.builtin.apt:
+        autoclean: yes
+
 - name: SSH - Disable password authentication for root.
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
@@ -33,44 +75,6 @@
     module_arguments: umask=0027
     backup: true
 
-- name: Perform a dist-upgrade.
-  ansible.builtin.apt:
-    upgrade: dist
-    update_cache: yes
-    cache_valid_time: 1
-  tags: remote # Add a tag to skip the task when the playbook is executed locally - it’ll have already been run to install Ansible.
-
-- name: Do not automatically start service(s) after installation
-  ansible.builtin.copy:
-    dest: /usr/sbin/policy-rc.d
-    content: 'exit 101'
-    mode: '755'
-
-- name: Install the package(s) from the var common_packages, ignoring install_recommends.
-  ansible.builtin.apt:
-    name: "{{ common_packages }}"
-    state: latest
-    install_recommends: no
-
-- name: Reboot, if required.
-  block:
-    - name: Check if a reboot is required.
-      ansible.builtin.stat:
-        path: /var/run/reboot-required
-        get_checksum: no
-      register: reboot_required_file
-
-    - name: Trigger a reboot, if one is required.
-      ansible.builtin.reboot:
-      when: reboot_required_file.stat.exists | default(false)
-
-- name: Clean Apt packages and cache.
-  block:
-    - name: Remove dependencies that are no longer required and purge their configuration files.
-      ansible.builtin.apt:
-        autoremove: yes
-        purge: true
-
-    - name: Remove package files that can no longer be downloaded from the cache.
-      ansible.builtin.apt:
-        autoclean: yes
+- name: Allow users who are not logged in to run long-running services
+  ansible.builtin.shell:
+    cmd: loginctl enable-linger
