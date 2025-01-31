@@ -34,15 +34,3 @@ if [[ "$(systemctl is-enabled hciuart)" == "Enabled" ]]; then
   # Disable hciuart (service for initalizing/configuring Bluetooth modems)
   systemctl disable hciuart
 fi
-
-if ! dpkg-query -W rockpi-penta | grep -Fq "dpkg-query: no packages found matching rockpi-penta"; then
-  echo "Installing Penta TopHAT drivers..."
-  # Download and install drivers for the Radxa Penta TopHAT
-  wget https://github.com/radxa/rockpi-penta/releases/download/v0.2.2/rockpi-penta-0.2.2.deb
-  dpkg -i ./rockpi-penta-0.2.2.deb
-  # Remove installation package
-  rm rockpi-penta-0.2.2.deb
-fi
-
-# Allows users who are not logged in to run long-running services (Raspberry Pi OS Lite)
-loginctl enable-linger
