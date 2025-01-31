@@ -1,8 +1,0 @@
----
-- name: Configure host(s).
-  hosts: all
-  become: true
-
-  tasks:
-    - import_tasks: tasks/init.yml
-    - import_tasks: tasks/security.yml
