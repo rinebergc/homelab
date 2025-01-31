@@ -12,6 +12,7 @@
       path: ./rockpi-penta-0.2.2.deb
       state: absent
 
+# TODO Move to common
 - name: Allows users who are not logged in to run long-running services (Raspberry Pi OS Lite)
   ansible.builtin.shell:
     cmd: loginctl enable-linger
