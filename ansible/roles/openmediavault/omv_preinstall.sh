@@ -9,10 +9,6 @@
 export DEBIAN_FRONTEND=noninteractive
 export APT_LISTCHANGES_FRONTEND=none
 
-echo "Checking for available package upgrades..."
-# Retrieve and install available package upgrades
-apt update && apt upgrade -y --no-install-recommends
-
 echo "Configuring LAN..."
 # Get the name of the active connection
 ACTIVE_CONNECTION="$(nmcli -t -f NAME con show --active | grep -v "lo")"
