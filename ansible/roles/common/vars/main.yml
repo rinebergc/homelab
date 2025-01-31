@@ -6,3 +6,4 @@ common_packages:
   - curl
   - python3-apt
   - ufw
+  - xz-utils
