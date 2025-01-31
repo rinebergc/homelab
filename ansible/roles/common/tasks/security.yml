@@ -32,3 +32,4 @@
     module_path: pam_umask.so
     module_arguments: umask=0027
     backup: true
+

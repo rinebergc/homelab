@@ -1,0 +1,7 @@
+---
+# Variables for the "common" role.
+common_packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - ufw

@@ -12,30 +12,31 @@
     content: 'exit 101'
     mode: '755'
 
-- name: Install the listed package(s), ignoring install_recommends.
+- name: Install the package(s) from the var common_packages, ignoring install_recommends.
   ansible.builtin.apt:
-    pkg:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - ufw
+    name: "{{ common_packages }}"
+    state: latest
     install_recommends: no
 
-- name: Check if a reboot is required.
-  ansible.builtin.stat:
-    path: /var/run/reboot-required
-    get_checksum: no
-  register: reboot_required_file
+- name: Reboot, if required.
+  block:
+    - name: Check if a reboot is required.
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+        get_checksum: no
+      register: reboot_required_file
 
-- name: Reboot the server (if a reboot is required).
-  ansible.builtin.reboot:
-  when: reboot_required_file is defined and reboot_required_file.stat.exists
+    - name: Trigger a reboot, if one is required.
+      ansible.builtin.reboot:
+      when: reboot_required_file.stat.exists | default(false)
 
-- name: Remove dependencies that are no longer required and purge their configuration files.
-  ansible.builtin.apt:
-    autoremove: yes
-    purge: true
+- name: Clean Apt packages and cache.
+  block:
+    - name: Remove dependencies that are no longer required and purge their configuration files.
+      ansible.builtin.apt:
+        autoremove: yes
+        purge: true
 
-- name: Remove package files that can no longer be downloaded from the cache.
-  ansible.builtin.apt:
-    autoclean: yes
+    - name: Remove package files that can no longer be downloaded from the cache.
+      ansible.builtin.apt:
+        autoclean: yes
