@@ -75,6 +75,6 @@
     module_arguments: umask=0027
     backup: true
 
-- name: Allow users who are not logged in to run long-running services
+- name: Allow users who are not logged in to run long-running services.
   ansible.builtin.shell:
     cmd: loginctl enable-linger
