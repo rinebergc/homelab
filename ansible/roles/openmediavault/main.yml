@@ -1,4 +1,21 @@
 ---
+- name: Download and install drivers for the Radxa Penta SATA HAT top board.
+  block:
+  - name: Download the driver installation package.
+    ansible.builtin.shell:
+      cmd: wget https://github.com/radxa/rockpi-penta/releases/download/v0.2.2/rockpi-penta-0.2.2.deb
+  - name: Install the driver package.
+    ansible.builtin.shell:
+      cmd: dpkg -i ./rockpi-penta-0.2.2.deb
+  - name: Remove the driver installation package.
+    ansible.builtin.file:
+      path: ./rockpi-penta-0.2.2.deb
+      state: absent
+
+- name: Allows users who are not logged in to run long-running services (Raspberry Pi OS Lite)
+  ansible.builtin.shell:
+    cmd: loginctl enable-linger
+
 - name: Install OpenMediaVault
   ansible.builtin.shell:
     cmd: wget -O - https://github.com/OpenMediaVault-Plugin-Developers/installScript/raw/master/install | sudo bash
