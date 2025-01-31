@@ -46,7 +46,3 @@ fi
 
 # Allows users who are not logged in to run long-running services (Raspberry Pi OS Lite)
 loginctl enable-linger
-
-echo -e "\nThe system will restart in 30 seconds.\n"
-sleep 30
-systemctl --no-wall reboot
