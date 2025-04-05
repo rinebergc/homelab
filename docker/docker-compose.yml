@@ -1,42 +1,21 @@
 services:
-  minecraft-server-fabric:
-    image: itzg/minecraft-server
-    container_name: minecraft-server-fabric
-    restart: unless-stopped
-    environment:
-      TZ: Etc/UTC
-      MEMORY: 12G
-      USE_AIKAR_FLAGS: TRUE
-      ENABLE_ROLLING_LOGS: TRUE
-      EULA: TRUE
-      DIFFICULTY: normal
-      LEVEL_TYPE: $LEVEL_TYPE
-      MOTD: $FABRIC_MOTD
-      OPS: $OPS
-      MOD_PLATFORM: MODRINTH
-      MODRINTH_MODPACK: https://modrinth.com/modpack/rine-time/version/1.0.7
-    volumes:
-      - "/opt/minecraft/minecraft-server-fabric:/data"
-
   minecraft-server-forge:
     image: itzg/minecraft-server
     container_name: minecraft-server-forge
     restart: unless-stopped
     environment:
-      TZ: Etc/UTC
       MEMORY: 12G
       USE_AIKAR_FLAGS: TRUE
       ENABLE_ROLLING_LOGS: TRUE
+      LOG_TIMESTAMP: TRUE
       EULA: TRUE
       DIFFICULTY: hard
-      LEVEL_TYPE: $LEVEL_TYPE
+      LEVEL_TYPE: bclib:betterx
       MOTD: $FORGE_MOTD
       OPS: $OPS
-      MOD_PLATFORM: MODRINTH
+      MODPACK_PLATFORM: MODRINTH
+      MODRINTH_VERSION: $VERSION_ID
       MODRINTH_FORCE_SYNCHRONIZE: TRUE
-      MODRINTH_MODPACK: https://modrinth.com/modpack/rine-time
-      MODRINTH_EXCLUDE_FILES: $FORGE_EXCLUSIONS
-      MODRINTH_FORCE_INCLUDE_FILES: $FORGE_INCLUSIONS
     volumes:
       - "/opt/minecraft/minecraft-server-forge:/data"
 
