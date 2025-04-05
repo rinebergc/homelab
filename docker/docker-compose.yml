@@ -12,7 +12,7 @@ services:
       DIFFICULTY: hard
       LEVEL_TYPE: bclib:betterx
       MOTD: $FORGE_MOTD
-      OPS: $OPS
+      OPS: $OPERATORS
       MODPACK_PLATFORM: MODRINTH
       MODRINTH_VERSION: $VERSION_ID
       MODRINTH_FORCE_SYNCHRONIZE: TRUE
@@ -26,4 +26,4 @@ services:
     command: tunnel --no-autoupdate run
     environment:
       TZ: Etc/UTC
-      TUNNEL_TOKEN: $TOKEN
+      TUNNEL_TOKEN: $CLOUDFLARE_TOKEN
