@@ -1,25 +1,25 @@
 services:
   minecraft-server-forge:
     image: itzg/minecraft-server
-    container_name: minecraft-server-forge
+    container_name: minecraft-server-neoforge
     restart: unless-stopped
     environment:
-      MEMORY: 12G
-      USE_AIKAR_FLAGS: TRUE
-      ENABLE_ROLLING_LOGS: TRUE
-      LOG_TIMESTAMP: TRUE
       EULA: TRUE
       DIFFICULTY: hard
-      LEVEL_TYPE: bclib:betterx
-      MOTD: $FORGE_MOTD
-      OPS: $OPERATORS
+      ENABLE_ROLLING_LOGS: TRUE
+      LOG_TIMESTAMP: TRUE
+      MEMORY: 8G
       MODPACK_PLATFORM: MODRINTH
-      MODRINTH_MODPACK: $PROJECT_ID
-      VERSION: $FORGE_MINECRAFT_VERSION
-      MODRINTH_VERSION: $FORGE_VERSION_ID
       MODRINTH_FORCE_SYNCHRONIZE: TRUE
+      MODRINTH_MODPACK: $PROJECT_ID
+      MODRINTH_VERSION: $VERSION_ID
+      MOTD: $MOTD
+      OPS: $OPERATORS
+      SNOOPER_ENABLED: FALSE
+      USE_AIKAR_FLAGS: TRUE
+      VERSION: 1.21.1
     volumes:
-      - "/opt/minecraft/minecraft-server-forge:/data"
+      - "/opt/minecraft/minecraft-server-neoforge:/data"
 
   cloudflared:
     image: cloudflare/cloudflared
